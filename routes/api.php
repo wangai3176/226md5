@@ -19,3 +19,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::post('/md5/search', 'Md5Controller@search');
+Route::post('/md5/add', 'Md5Controller@add');

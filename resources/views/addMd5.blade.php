@@ -37,20 +37,16 @@
 
     <div>
         <div class="jumbotron">
-            <p class="lead">输入让你无语的MD5</p>
+            <p class="lead">加密明文&&入库</p>
             <hr class="my-4">
             <div class="row">
                 <div class="col-md-4">
-                    <input type="text" class="form-control" placeholder="Input MD5" id="md5_input">
+                    <textarea class="form-control" rows="4" placeholder="支持多行，按回车分割，提交后会将该内容加密并存入数据库" id="raw_input"></textarea>
                 </div>
-                <div class="col-md-2">
-                    <button type="button" class="btn btn-primary" onclick="queryMd5()">查 询</button>
-                </div>
-            </div>
-            <div class="row" style="margin-top: 20px;">
                 <div class="col-md-4">
-                    <div class="alert alert-dismissible alert-primary">
-                        查询结果：<strong id="result">等待查询</strong>
+                    <button type="button" class="btn btn-primary" onclick="addMd5()">批量加密</button>
+                    <div class="alert alert-dismissible alert-primary" style="margin-top: 20px">
+                        加密结果：<strong id="result">等待查询</strong>
                     </div>
                 </div>
             </div>
@@ -71,21 +67,22 @@
 
 <script src="{{ URL::asset('js/app.js') }}"></script>
 <script>
-    function queryMd5() {
-        let md5 = document.getElementById('md5_input').value;
+    function addMd5() {
+        let raw = document.getElementById('raw_input');
         let resultDOM = document.getElementById('result');
 
-        resultDOM.innerText = '查询中....';
+        resultDOM.innerText = '入库中....';
 
         $.ajax({
-            url: '/api/md5/search',
+            url: '/api/md5/add',
             type: 'POST',
             data: {
-                md5,
+                raw: raw.value,
             },
             dataType: 'json',
             success: function (data) {
                 resultDOM.innerText = data.message;
+                raw.value = '';
             }
         })
     }

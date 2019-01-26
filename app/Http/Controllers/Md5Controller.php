@@ -18,7 +18,7 @@ class Md5Controller extends Controller
             ]);
         }
 
-        $raw_array = Md5::where('md5', $md5)->first();
+        $raw_array = Md5::where('md5', 'like', '%'.$md5)->first();
         if ($raw_array) {
 
             $raw = $raw_array->raw;
@@ -34,4 +34,32 @@ class Md5Controller extends Controller
             "message" => "无结果",
         ]);
     }
+
+    public function addMd5() {
+        return view('addMd5');
+    }
+
+    public function add(Request $request) {
+        $raw = $request->request->get('raw');
+
+        if (empty($raw)) {
+            return response()->json([
+                "status" => 1,
+                "message" => "明文不可为空",
+            ]);
+        }
+
+        $raw_array = explode("\n", $raw);
+
+        foreach ($raw_array as $value) {
+            Md5::firstOrCreate(['raw' => $value, 'md5' => \md5($value)]);
+        }
+
+        return response()->json([
+            'status' => 0,
+            'message' => '入库完成',
+        ]);
+
+    }
+
 }
